@@ -1,22 +1,43 @@
 package com.matteoveroni.mycopies;
 
+import com.matteoveroni.mycopies.copy.CopyPercentageCheckerThread;
+import com.matteoveroni.mycopies.copy.CopyPercentagePrinter;
+import com.matteoveroni.mycopies.system.events.bus.SystemEventBus;
+import java.io.File;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import org.apache.commons.io.FileUtils;
 
 public class MainApp extends Application {
 
+    private static final String ORIGINAL_FILE_PATH = "/media/mavek/DATA/Uninettuno";
+    private static final String DESTINATION_FILE_PATH = "/home/mavek/cartella";
+
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
+
+        File originalFile = new File(ORIGINAL_FILE_PATH);
+        File destinationFile = new File(DESTINATION_FILE_PATH);
+
+        SystemEventBus systemEventBus = new SystemEventBus();
+
+        CopyPercentagePrinter cpPrinter = new CopyPercentagePrinter();
+        systemEventBus.addEventListener(cpPrinter);
         
+        Thread copyCheckerThread = new Thread(new CopyPercentageCheckerThread(systemEventBus, originalFile, destinationFile));
+
+        copyCheckerThread.start();
+        FileUtils.copyDirectory(originalFile, destinationFile, false);
+
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
+
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-        
+
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
         stage.show();
