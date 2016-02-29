@@ -3,6 +3,8 @@ package com.matteoveroni.mycopies.controllers;
 import com.matteoveroni.mycopies.copy.CopyTask;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
@@ -56,6 +58,11 @@ public class CopyScreenController implements Initializable {
 //    private Model model;
 	private Stage stage;
 //    private ScreensController myController;
+
+	File sourceFile;
+	File targetFile;
+	Path sourcePath;
+	Path targetPath;
 
 //    private static final Logger LOG = LoggerFactory.getLogger(CopyScreenController.class);
 	@Override
@@ -116,20 +123,23 @@ public class CopyScreenController implements Initializable {
 
 	@FXML
 	void chooseSourcePath(ActionEvent event) {
-		File sourcePathChoosen = chooseFileOrDirectory();
-		if (sourcePathChoosen != null && !sourcePathChoosen.toString().trim().equals("")) {
-			sourcePathTextField.setText(sourcePathChoosen.getAbsolutePath());
-			consolleTextArea.appendText(" - sourcePathChoosen: " + sourcePathChoosen + "\n");
+		sourceFile = chooseFileOrDirectory();
+		if (sourceFile != null && !sourceFile.toString().trim().equals("")) {
+			sourcePathTextField.setText(sourceFile.getAbsolutePath());
+			consolleTextArea.appendText(" - sourcePathChoosen: " + sourceFile + "\n");
 //            LOG.info("sourcePathChoosen: " + sourcePathChoosen);
 		}
 	}
 
 	@FXML
 	void chooseTargetPath(ActionEvent event) {
-		File targetPathChoosen = chooseFileOrDirectory();
-		if (targetPathChoosen != null && !targetPathChoosen.toString().trim().equals("")) {
-			targetPathTextField.setText(targetPathChoosen.getAbsolutePath());
-			consolleTextArea.appendText(" - targetPathChoosen: " + targetPathChoosen + "\n");
+		targetFile = chooseFileOrDirectory();
+		if (targetFile != null && targetFile.isDirectory() && !targetFile.toString().trim().equals("")) {
+			if (!targetFile.getName().equals(sourceFile.getName())) {
+				targetFile = FileSystems.getDefault().getPath(targetFile.getAbsolutePath(), sourceFile.getName()).toFile();
+			}
+			targetPathTextField.setText(targetFile.getAbsolutePath());
+			consolleTextArea.appendText(" - targetPathChoosen: " + targetFile + "\n");
 //            LOG.info("targetPathChoosen: " + targetPathChoosen);
 		}
 	}
@@ -164,12 +174,12 @@ public class CopyScreenController implements Initializable {
 		startCopyButton.setDisable(true);
 		System.out.println("a");
 
-		String sourcePathChoosen = sourcePathTextField.getText().trim();
-		String targetPathChoosen = targetPathTextField.getText().trim();
+		String sourcePath = sourcePathTextField.getText().trim();
+		String targetPath = targetPathTextField.getText().trim();
 
 		try {
 //            model.simpleCopy("name", new File(sourcePathChoosen), new File(targetPathChoosen));
-			consolleTextArea.appendText(" - startCopy: " + sourcePathChoosen + " -> " + targetPathChoosen + "\n");
+			consolleTextArea.appendText(" - startCopy: " + sourcePath + " -> " + targetPath + "\n");
 //            LOG.info("startCopy: " + sourcePathChoosen + " -> " + targetPathChoosen);
 		} catch (Exception ex) {
 			System.out.println("Qui non entra per il momento");
@@ -177,8 +187,8 @@ public class CopyScreenController implements Initializable {
 //            LOG.error(ex.getMessage());
 		}
 
-		File originalFile = new File(sourcePathChoosen);
-		File destinationFile = new File(targetPathChoosen);
+		File originalFile = new File(sourcePath);
+		File destinationFile = new File(targetPath);
 
 		CopyTask copyTask = new CopyTask(originalFile, destinationFile);
 
