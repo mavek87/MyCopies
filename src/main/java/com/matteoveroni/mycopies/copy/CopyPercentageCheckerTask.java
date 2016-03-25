@@ -30,6 +30,7 @@ public class CopyPercentageCheckerTask extends Task<Void> {
 //				double copyCompletationPercentage = calculateCopyCompletationPercentage();
 			long sizeOfDestination = FileUtils.sizeOfDirectory(destinationToCheck);
 			updateProgress(sizeOfDestination, sizeOfOrigin);
+			Thread.sleep(1000);
 //				updateMessage(String.format("%.1f", copyCompletationPercentage) + "%");
 //			} catch (InterruptedException ex) {
 //			}

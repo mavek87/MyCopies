@@ -93,13 +93,6 @@ public class CopyScreenController implements Initializable {
 //    }
 	@FXML
 	void initialize() {
-		assert backToMainScreenButton != null : "fx:id=\"backToMainScreenButton\" was not injected: check your FXML file 'CopyScreen.fxml'.";
-		assert consolleTextArea != null : "fx:id=\"consolleTextArea\" was not injected: check your FXML file 'CopyScreen.fxml'.";
-		assert sourcePathTextField != null : "fx:id=\"sourcePathTextField\" was not injected: check your FXML file 'CopyScreen.fxml'.";
-		assert chooseSourcePathButton != null : "fx:id=\"chooseSourcePathButton\" was not injected: check your FXML file 'CopyScreen.fxml'.";
-		assert targetPathTextField != null : "fx:id=\"targetPathTextField\" was not injected: check your FXML file 'CopyScreen.fxml'.";
-		assert startCopyButton != null : "fx:id=\"startCopyButton\" was not injected: check your FXML file 'CopyScreen.fxml'.";
-		assert chooseTargetPathButton != null : "fx:id=\"chooseTargetPathButton\" was not injected: check your FXML file 'CopyScreen.fxml'.";
 	}
 
 	@FXML

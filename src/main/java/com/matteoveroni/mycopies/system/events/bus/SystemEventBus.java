@@ -9,15 +9,15 @@ public class SystemEventBus {
 
     private final List<SystemEventListener> listeners = new CopyOnWriteArrayList<>();
 
-    public synchronized void addEventListener(SystemEventListener busListener) {
-        if (!listeners.contains(busListener)) {
-            listeners.add(busListener);
+    public synchronized void addEventListener(SystemEventListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
         }
     }
 
-    public synchronized void removeEventListener(SystemEventListener busListener) {
-        if (listeners.contains(busListener)) {
-            listeners.remove(busListener);
+    public synchronized void removeEventListener(SystemEventListener listener) {
+        if (listeners.contains(listener)) {
+            listeners.remove(listener);
         }
     }
 
